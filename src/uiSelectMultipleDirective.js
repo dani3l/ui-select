@@ -194,7 +194,8 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
       }
       // Handles selected options in "multiple" mode
       function _handleMatchSelection(key){
-        var caretPosition = _getCaretPosition($select.searchInput[0]),
+        var isRTL = angular.element('html[dir="rtl"]').length > 0,
+            caretPosition = _getCaretPosition($select.searchInput[0]),
             length = $select.selected.length,
             // none  = -1,
             first = 0,
@@ -204,19 +205,19 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
             prev  = $selectMultiple.activeMatchIndex-1,
             newIndex = curr;
 
-        if(caretPosition > 0 || ($select.search.length && key == KEY.RIGHT)) return false;
+        if(caretPosition > 0 || ($select.search.length && key == (isRTL ? KEY.LEFT : KEY.RIGHT))) return false;
 
         $select.close();
 
         function getNewActiveMatchIndex(){
           switch(key){
-            case KEY.LEFT:
+            case (isRTL ? KEY.RIGHT : KEY.LEFT):
               // Select previous/first item
               if(~$selectMultiple.activeMatchIndex) return prev;
               // Select last item
               else return last;
               break;
-            case KEY.RIGHT:
+            case (isRTL ? KEY.LEFT : KEY.RIGHT):
               // Open drop-down
               if(!~$selectMultiple.activeMatchIndex || curr === last){
                 $select.activate();
