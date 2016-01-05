@@ -391,7 +391,21 @@ uis.controller('uiSelectCtrl',
           if (containerWidth === 0) {
             return false;
           }
-          var inputWidth = containerWidth - input.offsetLeft - 10;
+          
+          // Check if document is rtl
+          var isRTL = angular.element('html[dir="rtl"]').length > 0,
+              inputWidth;
+
+          // If document is RTL - calculate offset right
+          if (isRTL) {
+            var offsetRight = containerWidth - (input.offsetLeft + ctrl.searchInput.outerWidth());
+            inputWidth = containerWidth - offsetRight - 10;
+          }
+
+          else {
+            inputWidth = containerWidth - input.offsetLeft - 10;
+          }
+          
           if (inputWidth < 50) inputWidth = containerWidth;
           ctrl.searchInput.css('width', inputWidth+'px');
           return true;
